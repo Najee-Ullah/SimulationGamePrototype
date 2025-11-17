@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e390a8c9d15a4b1418a7b462bf086387, type: 3}
   m_Name: BoxA
   m_EditorClassIdentifier: 
-  itemId: 1
+  itemId: 0
   itemName: BoxA
   itemDescription: A wooden Box
   itemIcon: {fileID: 21300000, guid: cd5dd6c15649c064689eb8c349154012, type: 3}

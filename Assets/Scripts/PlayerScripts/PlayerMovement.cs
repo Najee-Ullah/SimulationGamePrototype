@@ -1,9 +1,4 @@
-using System;
-using System.Runtime.CompilerServices;
-using UnityEditor.Rendering;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -26,7 +21,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private int bobFrequency = 2;
     [SerializeField] private float bobAmplitude = 1;
     [SerializeField] private int walkingBobMultiplier = 2;
+    [SerializeField] private float headBobDamping = 10f;
 
+    private Vector3 camStartPos;
     //CameraRotation Lerp
     private float cameraVerticalRotation = 0f;
     private float cameraTargetVerticalRotation = 0f;
@@ -45,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
+        camStartPos = cam.transform.localPosition;
         InputSystem = InputHandler.Instance;
     }
 
@@ -74,7 +72,8 @@ public class PlayerMovement : MonoBehaviour
         {
             bobTimer = 0;
         }
-        Vector3 targetPos = cam.transform.position + new Vector3(0, BobPositionOffset, 0);
+        Vector3 targetPos = new Vector3(cam.transform.position.x ,camStartPos.y,cam.transform.position.z)  + new Vector3(0, BobPositionOffset, 0);
+        targetPos.y = Mathf.Lerp(cam.transform.position.y, targetPos.y,Time.deltaTime * headBobDamping);
         cam.transform.position = targetPos;
         bobTimer += Time.deltaTime * bobFreq;
     }
@@ -98,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleMovement()
     {
-        Vector2 moveInput = InputSystem.GetMovementInput();
+        Vector2 moveInput = InputSystem.GetMovementInput().normalized;
         moveDir = transform.forward * moveInput.y + transform.right * moveInput.x;
 
         bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, movementSpeed * Time.deltaTime,collisionMask);

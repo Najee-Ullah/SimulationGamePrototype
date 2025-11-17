@@ -25,6 +25,8 @@ public class PlayerInteractions : MonoBehaviour
     private int defaultLayer;
     private GameObject currentTarget;
     private Camera cam;
+    private IInteractable currentInteractable;
+    private IPickable currentPickable;
 
     private bool IsHolding
     {
@@ -103,15 +105,11 @@ public class PlayerInteractions : MonoBehaviour
     {
         if (interactionUI != null)
         {
-            if (SimGameManager.Instance.IsGamePlaying())
+            bool shouldShow = SimGameManager.Instance.IsGamePlaying() && currentTarget != null;
+            if (shouldShow)
             {
-                if (currentTarget != null)
-                {
-                    if (interactionUI.IsActive() == false)
-                        ShowInteractionUI();
-                }
-                else
-                    HideInteractionUI();
+                if (interactionUI.IsActive() == false)
+                    ShowInteractionUI();
             }
             else
             {
@@ -122,28 +120,30 @@ public class PlayerInteractions : MonoBehaviour
     }
     private void ShowInteractionUI()
     {
-        if (currentTarget.TryGetComponent<IPickable>(out IPickable pickable))
+        string newText = "";
+        if (currentPickable != null)
         {
-            interactionUI.Show();
-            interactionUI.ChangeText(pickable.ItemData.itemName);
+            newText=currentPickable.ItemData.itemName;
         }
-        else if (currentTarget.TryGetComponent<IInteractable>(out IInteractable interactable))
+        else if (currentInteractable != null)
         {
-            interactionUI.Show();
-            interactionUI.ChangeText(interactable.ItemData.itemName);
+            newText = currentInteractable.InteractableName;
         }
-
+        interactionUI.ChangeText(newText);
+        interactionUI.Show();
     }
     private void HideInteractionUI()
     {
             interactionUI.Hide();
-            interactionUI.ChangeText("");
     }
 
     private void SetNewTarget(GameObject gameObj)
     {
         currentTarget = gameObj;
-        SetLayerRecursively(currentTarget, LayerMask.NameToLayer(outlineLayerName));
+        currentInteractable = gameObj.GetComponent<IInteractable>();
+        currentPickable = gameObj.GetComponent<IPickable>();
+        if(currentInteractable != null || currentPickable!=null) 
+          SetLayerRecursively(currentTarget, LayerMask.NameToLayer(outlineLayerName));
     }
 
     private void ClearPreviousTarget()

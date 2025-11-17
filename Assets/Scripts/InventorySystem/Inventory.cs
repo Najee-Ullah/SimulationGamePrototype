@@ -58,6 +58,13 @@ public class Inventory : MonoBehaviour
         }
 
     }
+
+    public bool HasItem(ItemDataSO item)
+    {
+        InventorySlot existingSlot = inventorySlots.Find(x => x.itemData == item);
+        return existingSlot != null;
+    }
+
     public int GetInventorySlotsAmount()
     {
         return inventorySlotsAllowed;

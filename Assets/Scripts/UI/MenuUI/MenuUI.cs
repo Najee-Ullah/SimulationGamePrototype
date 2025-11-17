@@ -25,6 +25,7 @@ public class MenuUI : MonoBehaviour
         QuitButton.onClick.AddListener(() => { Application.Quit(); });
 
         Hide();
+        Pause();
     }
 
     private void Instance_OnPauseAction(object sender, System.EventArgs e)

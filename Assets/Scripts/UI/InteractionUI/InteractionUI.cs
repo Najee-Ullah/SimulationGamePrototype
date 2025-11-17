@@ -8,17 +8,21 @@ public class InteractionUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI promptText;
     [SerializeField] private TextMeshProUGUI promptButtonText;
 
+    private string lastText = "";
     private bool isActive { get { return Visual.activeSelf; } }
 
     private void Start()
     {
-        Show();
         promptButtonText.text = InputHandler.Instance.GetInteractBindingString();
     }
 
     public void ChangeText(string text)
     {
-        promptText.text = text;
+        if (lastText != text)
+        {
+            promptText.SetText(text);
+            lastText = text;
+        }
     }
 
     public void Show()

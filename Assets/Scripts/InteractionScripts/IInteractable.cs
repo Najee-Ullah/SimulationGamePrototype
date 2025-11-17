@@ -2,6 +2,6 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    ItemDataSO ItemData { get; }
+    string InteractableName { get; }
     public void Interact();
 }

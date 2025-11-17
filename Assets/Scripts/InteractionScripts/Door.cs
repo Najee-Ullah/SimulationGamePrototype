@@ -16,6 +16,10 @@ public class Door : MonoBehaviour,IInteractable
 
     public ItemDataSO ItemData => throw new System.NotImplementedException();
 
+    public bool IsLock => throw new System.NotImplementedException();
+
+    public string InteractableName => throw new System.NotImplementedException();
+
     private void Start()
     {
 
